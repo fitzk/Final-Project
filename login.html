@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="generator"
+    content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
+    <title>User Login</title>
+	<?php include("login.php"); ?> 
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="loginScript.js"></script>
+  </head>
+  <body>
+    <section class="login">
+      <form action="/" id="login" method="post" accept-charset="utf-8">
+      User Name<input type="text" name = "username" value= "" placeholder= "username"></input> <br/>
+      Password<input type="password" name = "password" value= ""></input>
+	  <input type= "submit" value = "Log In"></input>
+	  </form>
+	  <div class="error">
+	  <p>no error</p></div>
+    </section>
+  </body>
+</html>
