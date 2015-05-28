@@ -11,12 +11,20 @@
   <body>
     <section class="login">
       <form action="/" id="login" method="post" accept-charset="utf-8">
-      User Name<input type="text" name = "username" value= "" placeholder= "username"></input> <br/>
-      Password<input type="password" name = "password" value= ""></input>
+      <input type="text" name = "username" value= "" placeholder= "username"></input> <br/>
+      <input type="password" name = "password" placeholder = "password" value= ""></input></br>
 	  <input type= "submit" value = "Log In"></input>
 	  </form>
-	  <div class="error">
-	  <p>no error</p></div>
     </section>
+	<section class="login">
+      <form action="/" id="newUser" method="post" accept-charset="utf-8">
+	  <input type="text" name = "email" value= "" placeholder= "email"></input> <br/>
+	  <input type="text" name = "username" value= "" placeholder= "username"></input> <br/>
+      <input type="password" name = "password" placeholder = "password" value= ""></input><br/>
+	  <input type= "submit" value = "Sign Up"></input>
+	  </form>
+    </section>
+	<div id="loginMessage">
+	 </div>
   </body>
 </html>
