@@ -1,0 +1,225 @@
+html {
+
+	font-family: Arial, Sans-serif;
+}
+#userInfo{
+	color:#FF0000;
+	width: 310px;
+}
+#userInfo p{
+
+color:#FF0000;
+}
+svg:not(:root) {
+  overflow: hidden;
+  margin-left: 35px;
+  margin-top: 20px;
+}
+g.slice path:hover{
+   fill: #FF0000;
+}
+.inputField {
+	width: 50%;
+	margin-bottom: 2em;
+
+}
+aside {
+	float: left;
+	width: 250px;
+	background: dimgray;
+	height: 800px;
+	position: fixed;
+}	
+
+section {
+margin-top: 20px;
+  width: 600px;
+  margin-left:320px;
+  padding: 0 auto;
+  background: white;
+  border-radius: 15px;
+}
+header{
+display: block;
+
+
+}
+ul{
+list-style-type: none;
+margin-top: 30px;
+text-align: center;
+margin-right: 20px;
+	
+
+}
+li:hover {
+
+	color: white;
+	
+	font-size: 24px;
+
+}
+
+li {
+font-size: 22px;
+color: peachpuff;
+
+}
+section.sideBar {
+	margin: 0 auto;
+	position: relative;
+	font-size: 16px;
+
+	
+
+}
+#timerFace{
+
+	font-size: 80px;
+	color: #FFCC00;
+	
+
+}
+#timer {
+
+float:left;
+}
+#tasks {
+
+	width: 70%;
+	float: left;
+	
+}
+section p{
+	padding: 5px;
+	color: blue;
+	font-size: 24px;
+
+
+} 
+#main{
+	overflow: hidden;
+	float:left;
+
+}
+#plusBtn{
+	
+/* 	background: #FFCC00;
+	font-size: 22px;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+
+	vertical-align:middle; */
+	
+}
+/* p:hover{
+
+	color: white;
+	font-size: 24px;
+
+} */
+
+header {
+	padding: 0 auto;
+	color: #FF0000;
+	font-style: bold;
+	font-size: 40px;
+	margin-left: 25px;
+}
+
+#row0 {
+	background: #FF0000;
+}
+#row0 p{
+	font-weight: bold;
+	background: #FF0000;
+	font-size: 18px;
+	color: white;
+	padding: 0;
+
+}
+table {
+	
+	background: white;
+	border-collapse:collapse;
+	
+	
+}
+
+#tbody {
+	display: tbody;
+}
+tr{
+	background: lightblue;
+	/* #FFFF66; */
+	padding: 2px;
+	border-width: 1px;
+	border: solid;
+	border-color: white;
+	display: table-row;
+}
+/* Sortable tables */
+
+.tableP{
+
+	 font-size: 16px;
+	 color: black;
+}
+td {
+	 padding: 5px;
+	 margin-left: 10px;
+	 margin-right: 10px;
+	
+
+}
+
+td.firstTd {
+	
+	 
+	padding: 5px;
+    border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	
+
+}
+td.lastTd {
+
+	margin: 0 auto; 
+	padding: 5px;
+    border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+
+
+}
+p{
+
+	margin: 0 auto;
+}
+.tblBtn {
+	
+    width:20%; 
+    margin:0 auto; 
+    display:block;
+
+}
+.timerButtons {
+	width: 100px;
+	height: 100px;
+	font-size: 20px;
+	display:inline;
+	
+}
+#start {
+
+  background: darkseagreen;
+
+}
+button {
+	margin:0 auto; 
+	border-radius: 5px;
+	background: white;
+	position:relative;
+	display: block;
+
+}

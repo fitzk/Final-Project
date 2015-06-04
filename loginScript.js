@@ -1,5 +1,6 @@
 $("document").ready(function(){
   
+  //NEW USER
   //on submit, send request to login.php
   //to bind params to query DB
  $("#newUser").submit(function(event){
@@ -24,11 +25,10 @@ $("document").ready(function(){
 	}
 	//ajax request 
 	postToServer(newUser);
-	//clear fields
-	$("#newUser").each(function(){
-		this.reset();
-	});
+	
   });
+  
+  //LOG IN
   //on submit, send request to login.php
   //to bind params to query DB
  $("#login").submit(function(event){
@@ -39,7 +39,8 @@ $("document").ready(function(){
 	event.preventDefault();
 	//error handling
 	if( name === "" || pass === ""){
-		$("#loginMessage").html("<p> Please enter your username and password </p>");	
+		$("#loginMessage").empty();
+		$("#loginMessage").append("<p> Please enter your username and password </p>");	
 		return 1;
 	}
 	//loginReq allows php script to 
@@ -49,8 +50,30 @@ $("document").ready(function(){
 		username : name,
 		password : pass
 	}
+	
 	//ajax request 
-	postToServer(loginReq);
+	$.ajax({	
+		url: "login.php",
+		method: "POST",
+		async: true,
+		data: loginReq
+	})
+	.done(function(msg){
+		var user = JSON.parse(msg);
+		
+		if(user['id'] === ""){
+			$("#loginMessage").empty();
+			$("#loginMessage").append("<p> Incorrect Username or Passowrd. </p>");	
+			return 1;
+		}else{
+			// Save data to sessionStorage
+			sessionStorage.setItem('username', user['username']);
+			sessionStorage.setItem('email', user['email']);
+			window.location = "http://web.engr.oregonstate.edu/~fitzsimk/Final-Project/home.html";
+		}
+		console.log("Data Saved: "+ msg);
+	}); 
+
 	$("#login").each(function(){
 		this.reset();
 	});
@@ -68,5 +91,3 @@ function postToServer(info){
 		console.log("Data Saved: "+ msg);
 	}); 
 }	
-
-

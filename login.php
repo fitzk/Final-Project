@@ -1,16 +1,19 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 	require 'methods.php';
 
-	session_start();
-	$mysqli = connectToServer();
-	createTable($mysqli);
+
+	createUsersTasks();
 	
-	if($_POST['type'] === "login"){
-		echo "login";	
+	if(isset($_POST['type']) && $_POST['type']=== "login"){
+		$result = findUser($_POST['username'],$_POST['password']);
+		echo '{ "id" : "'.$result['id'].'",  "username" : "'.$result['username'].'", "email" : "'.$result['email'].'" }';
 	}
-	if($_POST['type'] === "newUser"){
+	if(isset($_POST['type']) && $_POST['type']=== "newUser"){
 		addUser($_POST['email'],$_POST['username'],$_POST['password']);
 	}
-	$mysli->close();
+	
+	
 	
 ?>
