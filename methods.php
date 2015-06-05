@@ -345,7 +345,7 @@ function numTasksCourse($email,$course){
 		    $conn = connectToServer();
     if ($conn) {
         
-        if (!($stmt = $conn->prepare("SELECT id FROM tasks WHERE userEmail = ? AND course = ?"))) {
+        if (!($stmt = $conn->prepare("SELECT id, total FROM tasks WHERE userEmail = ? AND course = ?"))) {
             echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
         }
         if (!$stmt->bind_param("ss", $email, $course)) {
@@ -367,7 +367,7 @@ function numAllTasks($email){
 		    $conn = connectToServer();
     if ($conn) {
         
-        if (!($stmt = $conn->prepare("SELECT id FROM tasks WHERE userEmail = ?"))) {
+        if (!($stmt = $conn->prepare("SELECT id, total FROM tasks WHERE userEmail = ?"))) {
             echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
         }
         if (!$stmt->bind_param("s", $email)) {
@@ -386,6 +386,70 @@ function numAllTasks($email){
         }
 
 }
+
+
+function totalHoursPerCourse($email, $course){
+	$conn = connectToServer();
+    if ($conn) {
+        
+        if (!($stmt = $conn->prepare("SELECT total FROM tasks WHERE userEmail= ? and course=?"))) {
+            echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
+        }
+        if (!$stmt->bind_param("ss", $email,$course)) {
+            echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+        if (!$stmt->execute()) {
+            echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
+        }
+        $result = $stmt->get_result();
+		$totalTime = new DateTime('0000-00-00 00:00:00');
+		$allCourses = new DateTime('0000-00-00 00:00:00');
+        if ($result->num_rows > 0) {
+            $myArray = array();
+			$retArray = array();
+			$strArray = array();
+            while ($row = $result->fetch_array(MYSQL_ASSOC)) {
+			
+			$string = $row['total'];
+			//	'P7Y5M4DT4H3M2S'
+			
+				for ($i = 0; $i < strlen($string); $i++) {
+					if ($string[$i] != ':') {
+						if($string[$i]!= '-'){
+							if($string[$i] != ' '){
+								$strArr[] = $string[$i];
+							}
+						}
+					   
+                    }
+                }
+				
+				$interval = "P". $strArr[0] .$strArr[1] . $strArr[2] . $strArr[3] ."Y". $strArr[4] . $strArr[5] ."M". $strArr[6] . $strArr[7] ."DT" . $strArr[8] . $strArr[9] . "H" . $strArr[10] . $strArr[11] . "M" . $strArr[12] . $strArr[13] . "S";
+                $timeInterval = new DateInterval($interval);
+				unset($strArr);
+				//aggregate total time for a course
+				$totalTime = date_add($totalTime,$timeInterval);
+            }
+			//total times for all courses
+			
+            return $totalTime->format('0000-00-00 H:i:s');
+        } else {
+            return "0 results";
+        }
+		$result->close();
+        $conn->close();
+    } else {
+        echo "connection failed";
+    }
+	
+	function addTime(){
+		
+		
+		
+		
+	}
+	
+}
 function getCourseData($email){
 	//numAllTasks($email);
 	 $allTasks = numAllTasks($email);
@@ -395,20 +459,34 @@ function getCourseData($email){
 	
 	$myArray = array();
 	$newArray = array();
+	$strArr = array();
+	
+	 
+
+
+	
+	
 	foreach($arr as $item) { //foreach element in $arr
-    $isCourse = $item['course']; //etc
+		$isCourse = $item['course']; 
 		$newArray['label'] = $isCourse;
-		//$percentage = numTasksCourse($email,$isCourse)/$allTasks; 
-		$notPercentage = numTasksCourse($email,$isCourse);
-		$newArray['value']= $notPercentage;
+		$tFormat = totalHoursPerCourse($email,$isCourse);
+		
+		for ($i = 0; $i < strlen($tFormat); $i++) {
+			if ($i > 10) {
+						$strArr[] = $tFormat[$i];
+			}	   
+		}
+		
+		$isArr = implode($strArr);
+		unset($strArr);
+		$newArray['value']= $isArr;
 		$myArray[] = $newArray;
 		
 	}
 	return json_encode($myArray);
 }
-function getLog($email, $id)
-{
-    
+
+function getLog($email, $id){
     $conn = connectToServer();
     if ($conn) {
         
@@ -425,8 +503,9 @@ function getLog($email, $id)
         if ($result->num_rows > 0) {
             $myArray = array();
             while ($row = $result->fetch_array(MYSQL_ASSOC)) {
-                if ($row['stop'] != "0000-0-0 00:00:00")
+                if ($row['stop'] != "0000-0-0 00:00:00"){
                     $myArray[] = $row;
+				}
             }
             $result->close();
             return json_encode($myArray);
@@ -469,14 +548,13 @@ function getTotal($email, $id)
                             $strArr[] = $s[$i];
                         }
                     }
-                    //var_dump($strArr);
+                    
                     if (count($strArr) == 6) {
                         $interval = "PT" . $strArr[0] . $strArr[1] . "H" . $strArr[2] . $strArr[3] . "M" . $strArr[4] . $strArr[5] . "S";
                     }
                     $date->add(new DateInterval($interval));
                     unset($strArr);
-                }
-                
+                }   
             }
             $total = $date->format('0000-00-00 H:i:s');
             updateTime($email, $id, $total);
@@ -492,6 +570,16 @@ function getTotal($email, $id)
     
 }
 //"Y-m-d H:i:s"
+function addtime($time1, $time2)
+{
+    $stop  = new DateTime($time1);
+    $start = new DateTime($time2);
+    $diff  = $start->add($stop);
+    return $diff->format('%H:%I:%S');
+}
+
+
+
 function subtime($time1, $time2)
 {
     $stop  = new DateTime($time1);
@@ -506,10 +594,6 @@ function subtime($time1, $time2)
 function convertToSeconds($time)
 {
     
-    echo "Time: " . $time;
-    $timeArray = explode($time, ':');
-    
-    //  console.log("timeArray: ", timeArray);
     
     $hours   = settype($timeArray[0], "integer");
     $minutes = settype($timeArray[1], "integer");

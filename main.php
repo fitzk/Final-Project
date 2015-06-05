@@ -29,8 +29,8 @@ ini_set('display_errors', 1);
 	if(isset($_POST['type']) && $_POST['type']=== "getLog"){
 		$result = getLog($_POST['email'],$_POST['id']);
 		echo $result;
-		
 	}
+	
 	if(isset($_POST['type']) && $_POST['type']=== "addLog"){
 		addLog($_POST['email'],$_POST['id']);
 	}
