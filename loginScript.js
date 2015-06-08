@@ -24,7 +24,25 @@ $("document").ready(function(){
 		password : pass
 	}
 	//ajax request 
-	postToServer(newUser);
+		$.ajax({	
+		url: "login.php",
+		type: "POST",
+		async: true,
+		data: newUser
+	})
+	.done(function(msg){
+		var user = JSON.parse(msg);
+		if(msg === '1'){
+			$("#loginMessage").empty();
+			$("#loginMessage").append("<p> Username or email already exists, please try again. </p>");
+		}else if(msg === '0'){
+				$("#loginMessage").empty();
+				$("#loginMessage").append("<p> User created! Please proceed to login. </p>");
+			}
+ 		$("#newUser").each(function(){
+			this.reset();
+		}); 
+	}); 
 	
   });
   
@@ -54,24 +72,24 @@ $("document").ready(function(){
 	//ajax request 
 	$.ajax({	
 		url: "login.php",
-		method: "POST",
+		type: "POST",
 		async: true,
 		data: loginReq
 	})
 	.done(function(msg){
 		var user = JSON.parse(msg);
-		
-		if(user['id'] === ""){
-			$("#loginMessage").empty();
-			$("#loginMessage").append("<p> Incorrect Username or Passowrd. </p>");	
-			return 1;
-		}else{
-			// Save data to sessionStorage
-			sessionStorage.setItem('username', user['username']);
-			sessionStorage.setItem('email', user['email']);
-			window.location = "http://web.engr.oregonstate.edu/~fitzsimk/Final-Project/home.html";
+		if(msg === 1){
+				$("#loginMessage").html("<p> Incorrect Username or Password </p>");
+			}else{
+			if(user['id'] === ""){
+				$("#loginMessage").empty();
+				$("#loginMessage").append("<p> Incorrect Username or Password. </p>");	
+				return 1;
+			}else{
+				window.location = "http://web.engr.oregonstate.edu/~fitzsimk/Final-Project/home.html";
+			}
+			console.log("Data Saved: "+ msg);
 		}
-		console.log("Data Saved: "+ msg);
 	}); 
 
 	$("#login").each(function(){
@@ -83,7 +101,7 @@ $("document").ready(function(){
 function postToServer(info){
 	$.ajax({	
 		url: "login.php",
-		method: "POST",
+		type: "POST",
 		async: true,
 		data: info
 	})

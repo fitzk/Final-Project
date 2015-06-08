@@ -1,9 +1,19 @@
+<?php
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors','On');
+
+
+
+}
+?>
 <!DOCTYPE html>
 <html>
   <head>
     <meta name="generator"
     content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
     <title>Home</title>
+	<script src ="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.js"></script>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -14,19 +24,25 @@
     <script src="mainScript.js"></script>
   </head>
   <body>
-  
+
   <aside>
-  <section id = "userInfo" class="sideBar"></section>
+  <section id = "userInfo" class="sideBar">
+  </section>
 	 <ul class = "sideBar">
+	  <li id = "mtask">Main</li>
 	  <li id = "ntask">New Task</li>
 	  <li id = "task">Active Tasks</li>
-	  <li id = "ctask">Your Courses</li>
-	  <li id = "stask">Stats</li>
+	  	  <li id = "alltask">All Tasks</li>
+	  <li id = "ctask">Your Breakdown</li>
+	  <li id = "stask">All Users</li>
+	  <li id="link"><a href='logout.php'>logout</a></li>
 	</ul>
+	
   </aside>
 	
 	<section id = "main" class="main"></section>
 	<section id = "tasks"></section>
+	<div id = "cTime"></div>
 	<section id = "timer"></section>
   </body>
 </html>
