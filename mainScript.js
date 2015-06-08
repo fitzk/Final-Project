@@ -47,7 +47,7 @@ function main(){
    tasks.appendChild(header);
    var p = document.createElement('p');
  var pText = document.createTextNode(
-	"Assignment and studies tracker for University Students .");
+	"Assignment and studies tracker for University Students.");
  p.appendChild(pText);
  tasks.appendChild(p);
  tasks.appendChild(document.createElement('br'));
@@ -60,7 +60,7 @@ function main(){
   "courses are spending their time on studying and assignments."+" Add an assignment by selecting New Task."+
   " You can then view your Active Tasks and your current progress by selecting Tasks in the navigation list to the left."+
   " Start the timer by pressing the (+) button in the continue column of the table and let the timer run in the background as you study."+
-	"When you are done with a study session, just stop the timer"+
+	" When you are done with a study session, just stop the timer"+
   " and your updated log will be visible in the Active Tasks menu."+
   "If you finish a task or assignment, click the check button in the complete column of the table "+
   "and the assignment will no longer be visible in the Active Tasks menu. Completed tasks will however, still count towards the net "+
@@ -78,7 +78,7 @@ tasks.appendChild(p1);
 function getCourses() {
    var identifier = {
       type: "getCourseData"
-   }
+   };
    $.ajax({
       url: "main.php",
       type: "POST",
@@ -96,7 +96,7 @@ function getCourses() {
          var data = JSON.parse(jsonObj);
 		 var values = 0;
 		 data.forEach(function(object){
-			values += parseInt(object['value']);
+			values += parseInt(object.value);
 		 });
 		 console.log(values);
 		 if(values > 0){ 
@@ -155,7 +155,7 @@ function getAllTasks(){
 	   //var email = sessionStorage.getItem('email');
    var identifier = {
          type: "getAllTasks"
-      }
+      };
       //ajax request
    $.ajax({
       url: "main.php",
@@ -164,14 +164,15 @@ function getAllTasks(){
       data: identifier
    }).done(function(jsonObj) {
       if (jsonObj === "0 results") {
-         var tasks = document.getElementById('activeContent');
+		  $('#tasks').empty();
+         var tasks = document.getElementById('tasks');
          var p = document.createElement('p');
          var pText = document.createTextNode(
             "No tasks!");
          p.appendChild(pText);
          tasks.appendChild(p);
       } else {
-         makeAllTable(jsonObj)
+         makeAllTable(jsonObj);
       }
    });
 }
@@ -204,20 +205,19 @@ function makeAllTable(jsonObj){
          var id = "mainTbl";
          //console.log(id);
          var row = addRow(tbody, id);
-         addCell(row, object['task']);
-         addCell(row, object['course']);
-         addCell(row, object['estimate']);
-         var secs = String(object['total']);
+         addCell(row, object.task);
+         addCell(row, object.course);
+         addCell(row, object.estimate);
+         var secs = String(object.total);
          secs.trim();
          var time = hTime(secs, "s");
          addCell(row, time);
-		 //
-         var isDay = String(object['startDateTime']);
+         var isDay = String(object.startDateTime);
          isDay.trim();
          var sdate = moment(isDay, 'YYYY-MM-DD H:m:s').format(
             'M-D-YYYY');
 		addCell(row, sdate);
-		 var isfDay = String(object['finishDateTime']);
+		 var isfDay = String(object.finishDateTime);
          isfDay.trim();
 		 var fdate = moment(isfDay, 'YYYY-MM-DD H:m:s').format(
             'M-D-YYYY');
@@ -225,20 +225,17 @@ function makeAllTable(jsonObj){
             fdate = '-';
          }
          addCell(row, fdate);
-       
       });
       tasks.appendChild(table);
       $("tr td:first-child").addClass("firstTd");
       $("tr td:last-child").addClass("lastTd");
-	  
-	
 }
 
 function getTasks() {
-   //var email = sessionStorage.getItem('email');
+	
    var identifier = {
          type: "getTasks"
-      }
+      };
       //ajax request
    $.ajax({
       url: "main.php",
@@ -246,25 +243,24 @@ function getTasks() {
       async: true,
       data: identifier
    }).done(function(jsonObj) {
-      if (jsonObj === "0 results") {
-         var tasks = document.getElementById('activeContent');
+      if (jsonObj ==="0 results") {
+		  $("#tasks").empty();
+         var tasks = document.getElementById('tasks');
          var p = document.createElement('p');
          var pText = document.createTextNode(
             "No active tasks!");
          p.appendChild(pText);
          tasks.appendChild(p);
       } else {
-         makeTable(jsonObj)
+         makeTable(jsonObj);
       }
    });
 }
 
 function getAllUserTasks() {
-   //var email = sessionStorage.getItem('email');
    var identifier = {
          type: "getAllUserTasks",
-         //  email: email
-      }
+      };
       //ajax request
    $.ajax({
       url: "main.php",
@@ -272,8 +268,9 @@ function getAllUserTasks() {
       async: true,
       data: identifier
    }).done(function(jsonObj) {
+      var tasks = document.getElementById('tasks');
       if (jsonObj === "0 results") {
-         var tasks = document.getElementById('activeContent');
+		    $('#tasks').empty();
          var p = document.createElement('p');
          var pText = document.createTextNode(
             "No active tasks!");
@@ -281,14 +278,13 @@ function getAllUserTasks() {
          tasks.appendChild(p);
       } else {
          $('#tasks').empty();
-         var tasks = document.getElementById('tasks');
          var header = document.createElement('header');
          header.appendChild(document.createTextNode(
             "Active Tasks: All Students"));
          tasks.appendChild(header);
-         data = JSON.parse(jsonObj);
+         var data = JSON.parse(jsonObj);
          data.forEach(function(object) {
-            makeCourseTable(object['value']);
+            makeCourseTable(object.value);
          });
       }
    });
@@ -303,27 +299,26 @@ function makeCourseTable(data) {
    data.forEach(function(object, index) {
       if (index === 0) {
          var header = document.createElement('h1');
-         header.appendChild(document.createTextNode(object[
-            'course']));
+         header.appendChild(document.createTextNode(object.course));
          header.className = "courseHeader";
          tasks.appendChild(header);
          var thead = table.createTHead();
-         var row = thead.insertRow(0);
-         row.className = "row0";
-         addCell(row, "Task");
-         addCell(row, "Est.");
-         addCell(row, "Total Time");
-         addCell(row, "Last Active");
+         var rw = thead.insertRow(0);
+         rw.className = "row0";
+         addCell(rw, "Task");
+         addCell(rw, "Est.");
+         addCell(rw, "Total Time");
+         addCell(rw, "Last Active");
       }
       var id = "courseTbl";
       var row = addRow(tbody, id);
-      addCell(row, object['task']);
-      addCell(row, object['estimate']);
-      var secs = String(object['total']);
+      addCell(row, object.task);
+      addCell(row, object.estimate);
+      var secs = String(object.total);
       secs.trim();
       var time = hTime(secs, "s");
       addCell(row, time);
-      var isDay = String(object['date']);
+      var isDay = String(object.date);
       isDay.trim();
       var date = moment(isDay, 'YYYY-MM-DD').format(
          'MM-DD-YYYY');
@@ -368,14 +363,14 @@ function makeTable(jsonObj) {
          var id = "mainTbl";
          //console.log(id);
          var row = addRow(tbody, id);
-         addCell(row, object['task']);
-         addCell(row, object['course']);
-         addCell(row, object['estimate']);
-         var secs = String(object['total']);
+         addCell(row, object.task);
+         addCell(row, object.course);
+         addCell(row, object.estimate);
+         var secs = String(object.total);
          secs.trim();
          var time = hTime(secs, "s");
          addCell(row, time);
-         var isDay = String(object['date']);
+         var isDay = String(object.date);
          isDay.trim();
          var date = moment(isDay, 'YYYY-MM-DD').format(
             'MM-DD-YYYY');
@@ -404,26 +399,22 @@ function makeTable(jsonObj) {
          var icon4 = document.createElement('span');
          icon4.className = "glyphicon glyphicon-wrench";
          btn1.addEventListener("click", function() {
-            sessionStorage.setItem('currentTask', object[
-               'id']);
+            sessionStorage.setItem('currentTask', object.id);
             $("#tbodyA").hide("fast");
             runTimer();
          });
          btn2.addEventListener("click", function() {
-            sessionStorage.setItem('currentTask', object[
-               'id']);
+            sessionStorage.setItem('currentTask', object.id);
             finish();
             getTasks();
          });
          btn3.addEventListener("click", function() {
-            sessionStorage.setItem('currentTask', object[
-               'id']);
+            sessionStorage.setItem('currentTask', object.id);
             getTaskLog();
             $("#tbodyA").hide("fast");
          });
          btn4.addEventListener("click", function() {
-            sessionStorage.setItem('currentTask', object[
-               'id']);
+            sessionStorage.setItem('currentTask', object.id);
             remove();
          });
          btn1.appendChild(icon1);
@@ -461,9 +452,8 @@ function addCell(row, cellText) {
 function remove() {
    var toRemove = {
          type: "removeAll",
-         //    email: sessionStorage.getItem('email'),
          id: sessionStorage.getItem('currentTask')
-      }
+      };
       //ajax request
    $.ajax({
       url: "remove.php",
@@ -471,7 +461,6 @@ function remove() {
       async: true,
       data: toRemove
    }).done(function(data) {
-      getTasks();
       //on return update task list
       //sessionStorage.setItem('currentTask',"");
    }).fail(function(jqXHR, textStatus) {
@@ -482,8 +471,9 @@ function remove() {
 function removeOneLog() {
       var toRemove = {
             type: "removeOneLog",
-            id: sessionStorage.getItem('subTask')
-         }
+            id: sessionStorage.getItem('subTask'),
+			taskId: sessionStorage.getItem('currentTask')
+         };
          //ajax request
       $.ajax({
          url: "remove.php",
@@ -510,10 +500,10 @@ function taskForm() {
       header.appendChild(htext);
       tasks.appendChild(header);
       //create form
-      var taskForm = document.createElement('form');
-      taskForm.id = "newTask";
-      taskForm.class = "form";
-      taskForm.method = "POST";
+      var tForm = document.createElement('form');
+      tForm.id = "newTask";
+      tForm.className = "form";
+      tForm.method = "POST";
       //input for task description
       var taskDesc = document.createElement('input');
       taskDesc.className = "inputField";
@@ -541,9 +531,9 @@ function taskForm() {
       //appends each input to form
       var toAppend = [taskDesc, course, estimate, submit];
       toAppend.forEach(function(element) {
-         taskForm.appendChild(document.createElement("br"));
-         taskForm.appendChild(element);
-         taskForm.appendChild(document.createElement("br"));
+         tForm.appendChild(document.createElement("br"));
+         tForm.appendChild(element);
+         tForm.appendChild(document.createElement("br"));
       });
       //list.insertBefore(newItem, list.childNodes[0]);
       var ttext = document.createTextNode("Task Description");
@@ -551,11 +541,11 @@ function taskForm() {
       var ctext = document.createTextNode("Course Name");
       var etext = document.createTextNode(
          "Estimated Time To Complete Task");
-      taskForm.insertBefore(ttext, taskForm.childNodes[0]);
-      taskForm.insertBefore(ctext, taskForm.childNodes[4]);
-      taskForm.insertBefore(etext, taskForm.childNodes[8]);
+      tForm.insertBefore(ttext, tForm.childNodes[0]);
+      tForm.insertBefore(ctext, tForm.childNodes[4]);
+      tForm.insertBefore(etext, tForm.childNodes[8]);
       //append form to section main
-      tasks.appendChild(taskForm);
+      tasks.appendChild(tForm);
       //ajax request with new task form info
       //if successful, prints message, asks
       //user if they would like to start task
@@ -563,16 +553,16 @@ function taskForm() {
          event.preventDefault();
          var taskData = $(this).serializeArray();
          //	console.log(taskData);
-         var t = taskData[0]['value'];
-         var c = taskData[1]['value'];
-         var est = taskData[2]['value'];
+         var t = taskData[0].value;
+         var c = taskData[1].value;
+         var est = taskData[2].value;
          var tsk = {
                type: "postTask",
                //      email: sessionStorage.getItem('email'),
                task: t,
                course: c,
                estimate: est
-            }
+            };
             //ajax request
          $.ajax({
             url: "main.php",
@@ -599,7 +589,7 @@ function addTaskLog() {
          type: "addLog",
          //   email: sessionStorage.getItem('email'),
          id: sessionStorage.getItem('currentTask')
-      }
+      };
       //ajax request
    $.ajax({
       url: "main.php",
@@ -615,7 +605,7 @@ function finish() {
       var tskLog = {
             type: "finish",
             id: sessionStorage.getItem('currentTask')
-         }
+         };
          //ajax request
       $.ajax({
          url: "main.php",
@@ -631,7 +621,7 @@ function updateTaskLog() {
       var tskLog = {
             type: "updateLog",
             id: sessionStorage.getItem('currentTask')
-         }
+         };
          //ajax request
       $.ajax({
          url: "main.php",
@@ -640,7 +630,6 @@ function updateTaskLog() {
          data: tskLog
       }).done(function(data) {
          //on return update task list
-         getTasks();
       });
    }
    /*Get Task Log*/
@@ -649,7 +638,7 @@ function getTaskLog() {
    var tskLog = {
          type: "getLog",
          id: sessionStorage.getItem('currentTask')
-      }
+      };
       //ajax request
    $.ajax({
       url: "main.php",
@@ -692,11 +681,11 @@ function showLog(data) {
          var row = addRow(tbody, id);
          inD++;
          addCell(row, inD);
-         var isDay = String(objLog['start']);
+         var isDay = String(objLog.start);
          isDay.trim();
          var date = moment(isDay, 'YYYY-MM-DD HH:mm:ss').format(
             'h:mm:ss MM-DD-YYYY');
-         var isDay1 = String(objLog['stop']);
+         var isDay1 = String(objLog.stop);
          isDay1.trim();
          var date1 = moment(isDay1, 'YYYY-MM-DD HH:mm:ss').format(
             'h:mm:ss MM-DD-YYYY');
@@ -706,8 +695,9 @@ function showLog(data) {
          var icon3 = document.createElement('span');
          icon3.className = "glyphicon glyphicon-remove";
          remove.addEventListener("click", function() {
-            console.log(objLog['id']);
-            sessionStorage.setItem('subTask', objLog['id']);
+          //  console.log(objLog['id']);
+            sessionStorage.setItem('subTask', objLog.id);
+			sessionStorage.setItem('currentTask', objLog.taskId);
 			removeOneLog();
 			getTaskLog();
          });
@@ -725,6 +715,7 @@ function showLog(data) {
 		  var head = document.getElementById("logHead");
 		  if(head) head.parentNode.removeChild(head);
 		  $("#tbodyA").show("slow");
+		    getTasks();
 	  });
 	  newCell1.appendChild(close);
       tasks.appendChild(table);
@@ -794,10 +785,10 @@ function runTimer() {
    /* Stop button */
    stop.onclick = function() {
       clearTimeout(t);
-   }
+   };
    stop.addEventListener("click", function() {
       updateTaskLog();
-      updateTotalTime;
+	  getTasks();
       $("#timer").empty();
       $("aside").animate({
          width: 'toggle'
@@ -810,7 +801,7 @@ function updateTotalTime() {
          type: "updateTime",
          //   email: sessionStorage.getItem('email'),
          id: sessionStorage.getItem('currentTask')
-      }
+      };
       //ajax request
    $.ajax({
       url: "main.php",

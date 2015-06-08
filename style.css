@@ -74,7 +74,7 @@ aside {
     float: left;
     width: 250px;
     background: dimgray;
-    height: 800px;
+    height: 100%;
     position: fixed;
 }
 #newUser > input[type="submit"]:nth-child(7),
@@ -120,8 +120,14 @@ section.sideBar {
     position: relative;
     font-size: 16px;
 }
+#tbodyA > tr:nth-child(2) > td{
+
+	display: block;
+
+}
 #timerFace {
-    font-size: 100px;
+	margin-left:27px;
+    font-size: 80px;
     color: #FF0000;
 }
 #timer {
@@ -152,7 +158,8 @@ section.sideBar {
 #tasks > header {
     color: #FF0000;
     font-size: 40px;
-	margin-bottom: 40px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 /* p:hover{
 
@@ -233,7 +240,7 @@ td.lastTd {
 	font-style: bold;
     display: inline;
 	background: salmon;
-	margin-left: 30px;
+	margin-left: 25px;
 }
 #start {
     background: darkseagreen;

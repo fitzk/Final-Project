@@ -9,18 +9,25 @@ require 'methods.php';
 	if( isset($_POST['type']) &&  $_POST['type'] === "checkSess"){
 		if(!isset($_SESSION['email'])){
 			echo "not set";
+			
 		}else{
 			echo $_SESSION['username'];
 		}
 	}
-	if(isset($_POST['type']) && $_POST['type']=== "postTask"){
+	
+ 	if(isset($_POST['type']) && $_POST['type']=== "postTask"){
 		addTask($_SESSION['email'],$_POST['task'],$_POST['course'],$_POST['estimate']);
 	}
-	
-/* 	if( isset($_POST['type']) &&  $_POST['type'] === "updateTime"){
-		$result = getTotal($_SESSION['email'],$_POST['id']);
-		echo $result;
-	} */
+/*	 
+	 if( isset($_POST['type']) &&  $_POST['type'] === "updateTime"){
+		 $result = getTasks($_SESSION['email']);
+		  $arr = json_decode($result, true);
+		//  var_dump($arr);
+		  foreach ($arr as $task){
+			  $total = getTotal($_SESSION['email'],$task['id']);
+			//updateTime($_SESSION['email'],$task['id'],$total);
+		  }
+	}  */
 	
 	if( isset($_POST['type']) &&  $_POST['type'] === "getCourses"){
 		$result = getCourses($_SESSION['email']);

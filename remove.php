@@ -10,7 +10,7 @@ if(isset($_POST['type']) && $_POST['type'] === "removeAll"){
 }
 
 if(isset($_POST['type']) && $_POST['type'] === "removeOneLog"){
-	removeOneLog($_SESSION['email'],$_POST['id']);
+	removeOneLog($_SESSION['email'],$_POST['id'],$_POST['taskId']);
 }
 
 ?>

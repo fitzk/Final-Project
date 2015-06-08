@@ -51,44 +51,8 @@ function createUsersTasks()
       }
     $mysqli->close();
   }
-function deleteAll()
-  {
-    $conn   = connectToServer();
-    $query  = "SELECT ID FROM Movies ORDER by ID";
-    //	$conn->close();
-    //	echo "Query: ". $query;
-    $result = $conn->query($query);
-    if (0 < $result->num_rows)
-      {
-        while ($row = $result->fetch_assoc())
-          {
-            //echo $row["ID"];
-            remove($row["ID"]);
-          }
-      }
-    if ($result->num_rows == 0)
-      {
-        $conn->close();
-      }
-  }
-function dropDownMenu()
-  {
-    $conn   = connectToServer();
-    $query  = "SELECT DISTINCT category FROM Movies ORDER by ID";
-    $result = $conn->query($query);
-    echo "<form name= 'dropdown' method = 'POST' >";
-    echo "<select name='selected'>";
-    $idNum = 0;
-    echo "<option value = NULL >ALL MOVIES</option>";
-    while ($row = $result->fetch_array())
-      {
-        echo "<option value='" . $row[0] . "' id = '" . $idNum . "'>" . $row[0] . "</option>";
-        $idNum++;
-      }
-    echo "</select>";
-    echo "<input type = 'submit' class='btn' value = 'filter'></input>";
-    echo "</form>";
-  }
+
+
 function removeTask($userEmail, $id)
   {
     settype($id, "integer");
@@ -98,16 +62,6 @@ function removeTask($userEmail, $id)
     if ($conn)
       {
         $stmt = $conn->query("DELETE FROM tasks WHERE userEmail = '" . $userEmail . "' AND  id = '" . $id . "'");
-        /* 		if (!($stmt = $conn->prepare("DELETE FROM taskLog WHERE userEmail = ? AND  taskId = ?" ))) {
-        echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
-        }
-        if (!$stmt->bind_param("sd",$userEmai,$id)) {
-        echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-        }
-        if (!$stmt->execute()) {
-        echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-        }  */
-        //printf("Affected rows (DELETE): %d\n", $stmt->affected_rows);	
         $conn->close();
       }
     else
@@ -115,10 +69,8 @@ function removeTask($userEmail, $id)
         echo "connection failed";
       }
   }
-function removeOneLog($userEmail, $id)
+function removeOneLog($userEmail, $id, $tskId)
   {
-    echo $userEmail;
-    echo $id;
     settype($id, "integer");
     $conn = connectToServer();
     if ($conn)
@@ -133,6 +85,7 @@ function removeOneLog($userEmail, $id)
       {
         echo "connection failed";
       }
+	handleTime($userEmail, $tskId);
   }
 function removeLogs($userEmail, $id)
   {
@@ -141,16 +94,6 @@ function removeLogs($userEmail, $id)
     if ($conn)
       {
         $stmt = $conn->query("DELETE FROM taskLog WHERE userEmail = '" . $userEmail . "' AND  taskId = '" . $id . "'");
-        /* 		if (!($stmt = $conn->prepare("DELETE FROM taskLog WHERE userEmail = ? AND  taskId = ?" ))) {
-        echo "Prepare failed: (" . $conn->errno . ") " . $conn->error;
-        }
-        if (!$stmt->bind_param("sd",$userEmai,$id)) {
-        echo "Binding parameters failed: (" . $stmt->errno . ") " . $stmt->error;
-        }
-        if (!$stmt->execute()) {
-        echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
-        }  */
-        //printf("Affected rows (DELETE): %d\n", $stmt->affected_rows);	
         $conn->close();
       }
     else
@@ -446,12 +389,13 @@ function updateLog($email, $id)
             echo "Execute failed: (" . $stmt->errno . ") " . $stmt->error;
           }
         $mysqli->close();
+		handleTime($email, $id);
       }
     else
       {
         echo "connection failed";
       }
-    getTotal($email, $id);
+    
   }
 function finish($email, $id)
   {
@@ -654,6 +598,7 @@ function getCourseData($email)
     $myArray  = array();
     $newArray = array();
     $strArr   = array();
+	if($arr != []){
     foreach ($arr as $item) //foreach element in $arr
       {
         $isCourse          = $item['course'];
@@ -663,6 +608,7 @@ function getCourseData($email)
         $myArray[]         = $newArray;
         unset($strArr);
       }
+	}
     return json_encode($myArray);
   }
 function all($email)
@@ -677,6 +623,7 @@ function all($email)
     $myArray  = array();
     $newArray = array();
     $strArr   = array();
+	if($arr != []){
     foreach ($arr as $item) //foreach element in $arr
       {
         $isCourse          = $item['course'];
@@ -687,6 +634,9 @@ function all($email)
         unset($strArr);
       }
     return json_encode($myArray);
+	}else{
+		return "0 results";
+	}
   }
 function getLog($email, $id)
   {
@@ -749,6 +699,9 @@ function getTotal($email, $id)
             $myArray = array();
             //  $date    = new DateTime('0000-00-00 00:00:00');
             $total   = 0;
+			$hours=0;
+			$minutes=0;
+			$seconds=0;
             while ($row = $result->fetch_array(MYSQL_ASSOC))
               {
                 if ($row['stop'] != "0000-0-0 00:00:00")
@@ -767,7 +720,7 @@ function getTotal($email, $id)
                     $string  = implode($strArr);
                     // echo "string: ".$string."<br/>"; 
                     $strArr2 = str_split($string, 2);
-                    ;
+                    
                     for ($j = 0; $j < count($strArr2); $j++)
                       {
                         $isInt = $strArr2[$j];
@@ -777,15 +730,15 @@ function getTotal($email, $id)
                             $minutes = $isInt;
                         if ($j == 2)
                             $seconds = $isInt;
-                        $total += convertToSeconds($hours, $minutes, $seconds);
-                        //	echo "Total: ".$total."<br/>";
                       }
+					   
                     unset($strArr);
                     unset($strArr2);
                     unset($string);
                   }
+				 $total += convertToSeconds($hours, $minutes, $seconds);
               }
-            updateTime($email, $id, $total);
+			   return $total;
             $result->close();
           }
         else
@@ -800,6 +753,10 @@ function getTotal($email, $id)
       }
   }
 //"Y-m-d H:i:s"
+function handleTime($email,$id){
+	$total = getTotal($email,$id);
+	updateTime($email, $id, $total);
+}
 function addtime($time1, $time2)
   {
     $stop  = new DateTime($time1);
