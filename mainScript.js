@@ -63,12 +63,12 @@ function main(){
 	" When you are done with a study session, just stop the timer"+
   " and your updated log will be visible in the Active Tasks menu."+
   "If you finish a task or assignment, click the check button in the complete column of the table "+
-  "and the assignment will no longer be visible in the Active Tasks menu. Completed tasks will however, still count towards the net "+
+  "and the assignment will no longer be visible in the Active Tasks menu, but it will be visible in the All Tasks menu. Completed tasks will however, still count towards the net "+
   "time applied to the course.  This is represented by the pie chart in the Breakdown section."+
   " If you accidentally left the timer running, you can delete any log by clicking the button in the edit column." +
-  "This site does not support manual entry for any task time spent in order to attempt to preserve the accuracy (people are generally poor estimators)."+
+  "This site does not support manual entry for any task time spent in order to attempt to preserve accuracy (people are generally poor estimators)."+
   "If other users are enrolled in your courses," + 
-  " you can access their Active Tasks and progress by navigating to the All Users on the side bar.";
+  " you can access their Active Tasks and progress by navigating to the Peer Tasks on the side bar.";
 	
 	p1.textContent=text1;
 
